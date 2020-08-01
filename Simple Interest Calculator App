@@ -1,0 +1,117 @@
+
+import 'package:flutter/material.dart';
+
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Container(
+      alignment: Alignment.center,
+      color: Colors.deepPurple,
+      padding: const EdgeInsets.only(top: 35.0, left: 15.0, right: 15.0),
+      child: Column(children: <Widget>[
+        Row(
+          children: <Widget>[
+            Expanded(
+                child: Text(
+              "Spice Jet",
+              textDirection: TextDirection.ltr,
+              style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontSize: 35.0,
+                  fontFamily: 'Raleway',
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white),
+            )),
+            Expanded(
+                child: Text(
+              "From Mumbai to Delhi",
+              textDirection: TextDirection.ltr,
+              style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontSize: 20.0,
+                  fontFamily: 'Raleway',
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white),
+            )),
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Expanded(
+                child: Text(
+              "Indigo",
+              textDirection: TextDirection.ltr,
+              style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontSize: 35.0,
+                  fontFamily: 'Raleway',
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white),
+            )),
+            Expanded(
+                child: Text(
+              "From Jaipur to Goa",
+              textDirection: TextDirection.ltr,
+              style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontSize: 20.0,
+                  fontFamily: 'Raleway',
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white),
+            )),
+          ],
+        ),
+        FlightImage(),
+        FlightBookingButton()
+      ]),
+    ));
+  }
+}
+
+class FlightImage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    AssetImage assetImage = AssetImage('images/flights.png');
+    Image image = Image(image: assetImage, width: 300.0, height: 300.0);
+    return Container(child: image);
+  }
+}
+
+class FlightBookingButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 250.0,
+      height: 50.0,
+      child: RaisedButton(
+        color: Colors.deepOrange,
+        child: Text(
+          "Click here to confirm Booking",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 20.0,
+              fontFamily: 'Raleway',
+              fontWeight: FontWeight.w700,
+              color: Colors.white),
+        ),
+        elevation: 6.0,
+        onPressed: () {
+          bookFlight(context);
+        }
+      ),
+    );
+  }
+  void bookFlight(BuildContext context){
+    var alertDialog = AlertDialog(
+      title: Text('Flight Booked Succesfully'),
+      content: Text("Have A Pleasant Flight"),
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return alertDialog;
+      }
+    );
+  }
+}
