@@ -1,0 +1,673 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+    title: "Todo List",
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      primarySwatch: Colors.deepPurple,
+      accentColor: Colors.deepPurpleAccent,
+      primaryColorBrightness: Brightness.dark,
+    ),
+    home: HomePage(),
+  ));
+}
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin<HomePage> {
+  @override
+  bool get wantKeepAlive => true;
+  var _formkey = GlobalKey<FormState>();
+  List<String> _todoItems = [];
+  List<int> preference = [];
+  List<String> CompletedTasks = [];
+  int _currentIndex = 0;
+  int Index = 1;
+  int y;
+
+  int addpreference(String val) {
+    int x = int.parse(preferenceController.text);
+    return x;
+  }
+
+  void onTappedBack(int ind) {
+    if (ind == 0) Navigator.pop(context);
+  }
+
+  TextEditingController titleController = TextEditingController();
+  TextEditingController preferenceController = TextEditingController();
+
+  void sortAscending() {
+    int i, j, temp1;
+    String temp2;
+    for (i = 0; i < preference.length - 1; i++) {
+      for (j = 0; j < preference.length - i - 1; j++) {
+        if (preference[j] > preference[j + 1]) {
+          temp1 = preference[j];
+          preference[j] = preference[j + 1];
+          preference[j + 1] = temp1;
+          temp2 = _todoItems[j];
+          _todoItems[j] = _todoItems[j + 1];
+          _todoItems[j + 1] = temp2;
+        }
+      }
+    }
+  }
+
+  void sortDescending() {
+    int i, j, temp1;
+    String temp2;
+    for (i = 0; i < preference.length - 1; i++) {
+      for (j = 0; j < preference.length - i - 1; j++) {
+        if (preference[j] < preference[j + 1]) {
+          temp1 = preference[j];
+          preference[j] = preference[j + 1];
+          preference[j + 1] = temp1;
+          temp2 = _todoItems[j];
+          _todoItems[j] = _todoItems[j + 1];
+          _todoItems[j + 1] = temp2;
+        }
+      }
+    }
+  }
+
+  void _addTodoItem(String val) {
+    setState(() {
+      int index = _todoItems.length;
+      _todoItems.add(val);
+    });
+  }
+
+  void _pushAddTodoScreen() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return Scaffold(
+          appBar: AppBar(
+            title: Text("ADD TASK"),
+          ),
+          body: Form(
+            key: _formkey,
+            child: ListView(children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(
+                    top: 15.0, bottom: 8.0, left: 8.0, right: 8.0),
+                child: TextFormField(
+                  controller: titleController,
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return 'Please enter valid Title';
+                    }
+                  },
+                  decoration: InputDecoration(
+                    errorStyle: TextStyle(
+                      color: Colors.deepPurple,
+                      fontSize: 15.0,
+                    ),
+                    labelText: 'Task Name',
+                    hintText: "Enter Something to do....",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0)),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: preferenceController,
+                  validator: (String value) {
+                    if (value.isEmpty ||
+                        int.parse(preferenceController.text) > 5 ||
+                        int.parse(preferenceController.text) < 1) {
+                      return 'Enter Valid Input between 1 and 5';
+                    }
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    errorStyle: TextStyle(
+                      color: Colors.deepPurple,
+                      fontSize: 15.0,
+                    ),
+                    labelText: 'Priority',
+                    hintText: "Enter priority 1 to 5",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0)),
+                  ),
+                ),
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RaisedButton(
+                        color: Colors.deepPurple,
+                        child: Text(
+                          "SAVE",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            if (_formkey.currentState.validate()) {
+                              _addTodoItem(titleController.text);
+                              preference
+                                  .add(int.parse(preferenceController.text));
+                              Navigator.pop(context);
+                              titleController.text = "";
+                              preferenceController.text = "";
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RaisedButton(
+                      color: Colors.deepPurple,
+                      child: Text(
+                        "CANCEL",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      onPressed: () {
+                        titleController.text = "";
+                        preferenceController.text = "";
+                        Navigator.pop(context);
+                      },
+                    ),
+                  )),
+                ],
+              )
+            ]),
+          ));
+    }));
+  }
+
+  Widget _buildTodoList() {
+    return ListView.builder(itemBuilder: (context, index) {
+      if (index < _todoItems.length)
+        return _buildTodoItem(_todoItems[index], index);
+    });
+  }
+
+  Widget _buildTodoItem(String todoText, int index) {
+    return Card(
+      color: Colors.white,
+      elevation: 3.0,
+      child: ListTile(
+          title: Text(
+            todoText,
+            style: TextStyle(
+              fontFamily: 'Raleway',
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          leading: CircleAvatar(
+            backgroundColor: Colors.yellow,
+            child: getPriorityIcon(preference[index]),
+          ),
+          trailing: GestureDetector(
+            child: Icon(Icons.delete, color: Colors.deepPurple),
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Are You Sure You Want To Delete"),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text("Yes"),
+                          onPressed: () {
+                            setState(() {
+                              _todoItems.removeAt(index);
+                              preference.removeAt(index);
+                            });
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("No"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+            },
+          ),
+          onTap: () {
+            aleartDialogBox(context, index);
+          }),
+    );
+  }
+
+  void Completed() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Completed Tasks"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.delete_forever),
+              onPressed: () {
+                setState(() {
+                  CompletedTasks.clear();
+                });
+                Navigator.pop(context);
+                Completed();
+              },
+              tooltip: "Delete All",
+            ),
+          ],
+        ),
+        body: _buildCompletedList(),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: Index,
+          type: BottomNavigationBarType.shifting,
+          selectedFontSize: 20.0,
+          items: [
+            BottomNavigationBarItem(
+              title: Text(
+                "Items",
+                style: TextStyle(
+                  color: Colors.deepPurple,
+                ),
+              ),
+              backgroundColor: Colors.white,
+              icon: Icon(
+                Icons.message,
+                color: Colors.deepPurple,
+              ),
+            ),
+            BottomNavigationBarItem(
+              title: Text(
+                "Completed",
+                style: TextStyle(
+                  color: Colors.deepPurple,
+                ),
+              ),
+              icon: Icon(
+                Icons.done_all,
+                color: Colors.deepPurple,
+              ),
+              backgroundColor: Colors.white,
+            )
+          ],
+          onTap: (int ind) {
+            onTappedBack(ind);
+          },
+        ),
+      );
+    }));
+  }
+
+  Widget _buildCompletedList() {
+    return ListView.builder(itemBuilder: (context, ind) {
+      if (ind < CompletedTasks.length)
+        return _buildCompletedItem(CompletedTasks[ind], ind);
+    });
+  }
+
+  Widget _buildCompletedItem(String todoText, int ind) {
+    return Card(
+      color: Colors.white,
+      elevation: 3.0,
+      child: ListTile(
+        title: Text(
+          todoText,
+          style: TextStyle(
+            fontFamily: 'Raleway',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        leading: CircleAvatar(
+          backgroundColor: Colors.yellow,
+          child: Icon(Icons.arrow_forward_ios, color: Colors.deepPurple),
+        ),
+        trailing: GestureDetector(
+          child: Icon(Icons.delete, color: Colors.deepPurple),
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                      title: Text("Are You Sure You Want To Delete"),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text("Yes"),
+                          onPressed: () {
+                            setState(() {
+                              CompletedTasks.removeAt(ind);
+                            });
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Completed();
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("No"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        )
+                      ]);
+                });
+          },
+        ),
+      ),
+    );
+  }
+
+  void help() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Help"),
+        ),
+        body: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "This app takes the items of your todo tasks and stores it with the various functionality provided in the app.",
+                style: TextStyle(
+                  fontFamily: "RobotoMono",
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "You can also Sort the items according to your convienience and delete all or respective items.",
+                style: TextStyle(
+                  fontFamily: "RobotoMono",
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "After deleting certain items you can find the item in the completed lists page from where you can furthur delete it items.",
+                style: TextStyle(
+                  fontFamily: "RobotoMono",
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "On long press of certain icons you can also see the type of functionality they perform.",
+                style: TextStyle(
+                  fontFamily: "RobotoMono",
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Thanks and Enjoy the Experience!!",
+                style: TextStyle(
+                  fontFamily: "RobotoMono",
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Text(
+                "All rights reserved @copyright",
+                style: TextStyle(
+                  fontFamily: "RobotoMono",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10.0,
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    }));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("TODO Items"),
+      ),
+      body: _buildTodoList(),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.yellow,
+        child: Icon(Icons.add, color: Colors.deepPurple, size: 35.0),
+        tooltip: "Add Task",
+        onPressed: _pushAddTodoScreen,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            ListTile(
+              title: Text(
+                "Sort By Ascending",
+                style: TextStyle(
+                  fontFamily: "Raleway",
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              leading: Icon(Icons.arrow_upward, color: Colors.deepPurple),
+              onTap: () {
+                setState(() {
+                  sortAscending();
+                });
+                debugPrint("Ascending pressed");
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              title: Text(
+                "Sort By Descending",
+                style: TextStyle(
+                  fontFamily: "Raleway",
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              leading: Icon(Icons.arrow_downward, color: Colors.deepPurple),
+              onTap: () {
+                setState(() {
+                  sortDescending();
+                });
+                debugPrint("Desending pressed");
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              title: Text(
+                "Completed Page",
+                style: TextStyle(
+                  fontFamily: "Raleway",
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              leading: Icon(
+                Icons.done_all,
+                color: Colors.deepPurple,
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                Completed();
+              },
+            ),
+            ListTile(
+              title: Text(
+                "Delete All",
+                style: TextStyle(
+                  fontFamily: "Raleway",
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              leading: Icon(
+                Icons.delete_forever,
+                color: Colors.deepPurple,
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Are You Sure You Want To Delete All"),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text("Yes"),
+                            onPressed: () {
+                              setState(() {
+                                _todoItems.clear();
+                                preference.clear();
+                              });
+                              Navigator.pop(context);
+                            },
+                          ),
+                          FlatButton(
+                            child: Text("No"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
+                      );
+                    });
+              },
+            ),
+            ListTile(
+              title: Text(
+                "Help",
+                style: TextStyle(
+                  fontFamily: "Raleway",
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              leading: Icon(
+                Icons.help_outline,
+                color: Colors.deepPurple,
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                help();
+              },
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        type: BottomNavigationBarType.shifting,
+        selectedFontSize: 20.0,
+        items: [
+          BottomNavigationBarItem(
+            title: Text(
+              "Items",
+              style: TextStyle(
+                color: Colors.deepPurple,
+              ),
+            ),
+            backgroundColor: Colors.white,
+            icon: Icon(
+              Icons.message,
+              color: Colors.deepPurple,
+            ),
+          ),
+          BottomNavigationBarItem(
+            title: Text(
+              "Completed",
+              style: TextStyle(
+                color: Colors.deepPurple,
+              ),
+            ),
+            icon: Icon(
+              Icons.done_all,
+              color: Colors.deepPurple,
+            ),
+            backgroundColor: Colors.white,
+          )
+        ],
+        onTap: (int ind) {
+          onTapped(ind);
+        },
+      ),
+    );
+  }
+
+  void onTapped(int ind) {
+    if (ind == 1)
+      Completed();
+    else
+      HomePage();
+  }
+
+  Icon getPriorityIcon(int priority) {
+    switch (priority) {
+      case 1:
+        return Icon(Icons.looks_one);
+        break;
+      case 2:
+        return Icon(Icons.looks_two);
+        break;
+      case 3:
+        return Icon(Icons.looks_3);
+        break;
+      case 4:
+        return Icon(Icons.looks_4);
+        break;
+      case 5:
+        return Icon(Icons.looks_5);
+        break;
+
+      default:
+        return Icon(Icons.looks_one);
+    }
+  }
+
+  Widget aleartDialogBox(BuildContext context, int index) {
+    var alertDialog = AlertDialog(
+      title: Text('Mark "${_todoItems[index]}" as Completd'),
+      actions: <Widget>[
+        FlatButton(
+          child: Text("Cancel"),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        FlatButton(
+          child: Text("Mark as Completed"),
+          onPressed: () {
+            setState(() {
+              CompletedTasks.add(_todoItems[index]);
+              _todoItems.removeAt(index);
+              Navigator.pop(context);
+            });
+          },
+        ),
+      ],
+    );
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alertDialog;
+        });
+  }
+}
