@@ -1,0 +1,227 @@
+import 'package:flutter/cupertino.dart';
+import "package:flutter/material.dart";
+
+void main() {
+  runApp(MaterialApp(
+    title: "Recreate UI",
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      accentColor: Colors.redAccent,
+      primarySwatch: Colors.red,
+      fontFamily: "Product",
+    ),
+    home: Material(
+        child: Scaffold(
+      appBar: AppBar(
+        title: Text("App Recreation"),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.fromLTRB(18.0, 20.0, 0.0, 12.0),
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(
+                color: Colors.grey[300],
+                width: 1.0,
+              ))),
+              child: Text(
+                "Gmail",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0,left: 2.0,right: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(topRight:Radius.circular(30.0),bottomRight: Radius.circular(30.0)),
+                  color: Colors.red[50],
+                ),
+                child: ListTile(
+                    dense: true,
+                    title: Text("Primary",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    leading: Icon(Icons.inbox,color: Colors.red,),
+                    trailing: Text(
+                      " 99+",
+                      style: TextStyle(
+                        fontFamily: "RobotoMono",
+                        fontSize: 14.0,
+                        color: Colors.red[800],
+                      ),
+                    ),
+                  ),
+              ),
+            ),
+            ListTile(
+              dense: true,
+              title: Text("Social",
+                  style: TextStyle(
+                    fontSize: 16,
+                  )),
+              leading: Icon(Icons.people),
+            ),
+            ListTile(
+              dense: true,
+              title: Text("Promotions",
+                  style: TextStyle(
+                    fontSize: 16,
+                  )),
+              leading: Icon(Icons.local_offer),
+              trailing: Container(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0,5.0,10.0,5.0),
+                  child: Text(
+                    "3 new",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w200,
+                    ),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.green[800],
+                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                ),
+              ),
+            ),
+            ListTile(
+              dense: true,
+              title: Text("Updates",
+                  style: TextStyle(
+                    fontSize: 16,
+                  )),
+              leading: Icon(Icons.info_outline),
+                trailing: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10.0,5.0,10.0,5.0),
+                    child: Text(
+                      "1 new",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w200,
+                      ),
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.yellow[800],
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
+                ),
+            ),
+            ListTile(
+              dense: true,
+              title: Text("Forums",
+                  style: TextStyle(
+                    fontSize: 16,
+                  )),
+              leading: Icon(Icons.forum),
+              // trailing: ,
+            ),
+            Container(
+                padding: EdgeInsets.fromLTRB(18.0, 20.0, 0.0, 10.0),
+                child: Text(
+                  "ALL LABELS",
+                  style: TextStyle(
+                    color: Colors.grey[500],
+                    fontSize: 14.0,
+                    fontFamily: "RobotoMono",
+                    fontWeight: FontWeight.bold,
+                  ),
+                )),
+            ListTile(
+              dense: true,
+              title: Text("Starred",
+                  style: TextStyle(
+                    fontSize: 16,
+                  )),
+              leading: Icon(Icons.star_border),
+              //trailing: ,
+            ),
+            ListTile(
+              dense: true,
+              title: Text("Snoozed",
+                  style: TextStyle(
+                    fontSize: 16,
+                  )),
+              leading: Icon(Icons.access_time),
+              //trailing: ,
+            ),
+            ListTile(
+                dense: true,
+                title: Text("Important",
+                    style: TextStyle(
+                      fontSize: 16,
+                    )),
+                leading: Icon(Icons.label_important),
+                trailing: Text(
+                  " 99+",
+                  style: TextStyle(
+                    fontFamily: "RobotoMono",
+                    fontSize: 14.0,
+                    color: Colors.grey[700],
+                  ),
+                )),
+            ListTile(
+              dense: true,
+              title: Text("Sent",
+                  style: TextStyle(
+                    fontSize: 16,
+                  )),
+              leading: Icon(Icons.send),
+              //trailing: ,
+            ),
+            ListTile(
+              dense: true,
+              title: Text("Scheduled",
+                  style: TextStyle(
+                    fontSize: 16,
+                  )),
+              leading: Icon(Icons.timelapse),
+              //trailing: ,
+            ),
+            ListTile(
+              dense: true,
+              title: Text("Outbox",
+                  style: TextStyle(
+                    fontSize: 16,
+                  )),
+              leading: Icon(Icons.call_missed_outgoing),
+              //trailing: ,
+            ),
+            ListTile(
+              dense: true,
+              title: Text("Drafts",
+                  style: TextStyle(
+                    fontSize: 16,
+                  )),
+              leading: Icon(Icons.insert_drive_file),
+              trailing: Padding(
+                padding: const EdgeInsets.fromLTRB(0,0,6.0,0),
+                child: Text(
+                  "32",
+                  style: TextStyle(
+                    fontFamily: "RobotoMono",
+                    fontSize: 14.0,
+                    color: Colors.grey[700],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    )),
+  ));
+}
